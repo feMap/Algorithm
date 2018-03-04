@@ -16,7 +16,7 @@ int main()
         book[t]++;
     }
 
-    for(i=0;i<n;i++)
+    for(i=0;i<1001;i++)
         for(j=1;j<=book[i];j++)
             printf("%d ", i);
 
