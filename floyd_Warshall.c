@@ -32,7 +32,7 @@ int main()
             printf("%10d", e[i][j]);
         }
         printf("\n");
-    }
+    } 
 
     return 0;
 }
