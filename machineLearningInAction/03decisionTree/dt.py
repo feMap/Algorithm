@@ -68,9 +68,20 @@ def createDataSet():
                [1, 0, 'no'],
                [0, 1, 'no'],
                [0, 1, 'no']]
-    lables = ['no surfacing', 'flippers']
+    labels = ['no surfacing', 'flippers']
     return dataSet, labels
-    
+
+def majorityCnt(classList):
+    classCount = {}
+    for vote in classList:
+        if vote not in classCount.keys():
+            classCount[vote] = 0   
+        classCount[vote] += 1
+    # sortedClassCount = sorted(classCount.items(), key = operator.itemgetter(1), reverse = True)
+    sortedClassCount = sorted(classCount.items(), key = lambda items: items[1], reverse = True)
+    return sortedClassCount[0][0]
+
+### Decision Tree Core Part ###
 def createTree(dataSet, labels):
     classList = [example[-1] for example in dataSet]
     if classList.count(classList[0]) == len(classList):
@@ -81,9 +92,17 @@ def createTree(dataSet, labels):
     bestFeat = chooseBestFeatureToSplit(dataSet)
     
     bestFeatLabel = labels[bestFeat]
-    myTree = {bestFeatLable: {}}
+    myTree = {bestFeatLabel: {}}
     
     del(labels[bestFeat])
+    
+    featValues = [example[bestFeat] for example in dataSet]
+    uniqueVals = set(featValues)
+    for value in uniqueVals:
+        subLabels = labels[:]
+        myTree[bestFeatLabel][value] = createTree(splitDataSet(dataSet, bestFeat, value), subLabels)
+    
+    return myTree
     
     
 
@@ -100,5 +119,5 @@ def classify(inputTree, featLabels, testVec):
     if isinstance(valueOfFeat, dict):
         classLabel = classify(valueOfFeat, featLabels, testVec)
     else:
-        lacssLabel = valueOfFeat
+        classLabel = valueOfFeat
     return classLabel
